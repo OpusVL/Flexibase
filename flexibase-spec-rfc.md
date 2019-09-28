@@ -269,6 +269,17 @@ this, the Mind is initialised with the completed Hive. At this stage, it is
 guaranteed that all other Minds are available. It is also guaranteed that
 dependencies are initialised.
 
+Minds cannot leave their Hive context for behaviour! In some cases, the
+application is using a singleton or global strategy for its Hive, but it is also
+perfectly acceptable that the application is using a Hive stored in a local
+scope. It is also perfectly acceptable for the system to arbitrarily create
+another Hive at any point for whatever reason.
+
+This means that you can only ever be sure of the existence of the Hive you are
+installed in, or of a Hive you construct yourself for a specific purpose.
+Remember that the Hive you are installed in has already been sanity-checked
+against your dependency specification, so it's the only Hive you can be sure of.
+
 ### Specification
 
 > A Mind MUST wear at least one Hat.
@@ -279,10 +290,12 @@ dependencies are initialised.
 
 > A Mind MAY provide one or more services.
 
-> A Mind SHOULD NOT hold a reference to the Hive it was installed in, unless the
-> implementor can guarantee that this Hive is never rendered obsolete.
-
 > A Mind MUST throw an exception if initialisation fails for any reason.
+
+> A Mind MUST be able to determine the Hive in which it is installed.
+
+> The Mind MUST NOT use a Hive that it does not own, or the Hive in which it is
+> installed.
 
 #### `Str name = 'defaultname'`
 
@@ -305,6 +318,23 @@ Returns a list of service names available on this Mind.
 
 Runs any necessary initialisation. Default behaviour is no-op. No return value
 is expected; a failure to initialise should be fatal.
+
+#### `!hive() -> Hive`
+
+Private method. Return the Hive in which this Mind is installed. Minds should
+*never* use any other Hive than this; except that they may construct a *new*
+Hive for private use and call methods on that.
+
+#### `!other-mind(Str name) --> Mind`
+
+Private method. Returns the other mind from *the same Hive* by the given name.
+Additionally, this should cause a fatal error if a Mind is requested that this
+Mind does not declare a dependency on. This could easily be written just once in
+a base class for Minds.
+
+As with `mind` on the Hive (which this should use), use of this method is
+discouraged, because it couples your Mind to another Mind instead of an abstract
+service. Prefer to use `self.hive.service(Str)` instead.
 
 ## Hats
 
