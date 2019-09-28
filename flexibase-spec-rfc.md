@@ -34,6 +34,9 @@ of user interface. There exist frameworks for web applications - both
 browser-side and server side - for mobile devices, for desktop environments, for
 terminal applications...
 
+![A system without Flexibase](not-flexibase.png "Without Flexibase, the system
+must use plugins designed for the framework")
+
 The problem with this approach is that the framework you select is the same
 technology that defines how your modular code is actually put together. However
 carefully you try to modularise your code you must always write some sort of
@@ -56,6 +59,9 @@ Flexibase does not require you to decide what you are writing before you write
 it. Instead, it encourages you to write services that can be employed by any
 application, and defers the user interface concerns to whatever point you choose
 to implement it.
+
+![A system with Flexibase](flexibase.png "With Flexibase, you can use any
+component in any system, and one of those components is the user interface")
 
 > For example, you want to write a web application. You start a Flexibase
 > application and select a module that provides an auth service, and a module
